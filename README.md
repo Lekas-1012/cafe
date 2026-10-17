@@ -6,7 +6,9 @@
 
 親手轉動磨豆機、移動粉杯、掌握水溫，再控制水壺與粉床上的落點。所有材料、粉床、液面與滴漏都有實際狀態，會共同影響風味及成績。無店鋪經營、貨幣、會員、後端或付費 API。
 
-**已在本機實作並使用 Chrome 自動化操作驗證；尚未上傳或公開部署 GitHub Pages。**
+**已公開部署：<https://lekas-1012.github.io/cafe/>**
+
+Repository：<https://github.com/Lekas-1012/cafe>
 
 ## 啟動遊戲
 
@@ -127,23 +129,25 @@
 
 ### 建立 Repository 與上傳
 
+本專案目前已部署至公開 Repository `Lekas-1012/cafe`。若要在自己的帳號重新部署：
+
 1. 登入 GitHub，選 **New repository**。
-2. 名稱可用 **coffee-brewing-game**，選 **Public**，建立 Repository。
+2. 名稱可用 **cafe**，選 **Public**，建立 Repository。
 3. 選 **uploading an existing file**，或 **Add file → Upload files**。
 4. 上傳 index.html、style.css、js/、assets/、docs/、README.md、tests/、.gitignore、.nojekyll，保留資料夾結構。**index.html 要直接位於 Repository 根目錄。**
 5. 不要上傳 .tools/、tests/artifacts/、__pycache__/；它們含本機測試套件、備份及產出，均非部署所需。
 6. 填入提交說明，按 **Commit changes**。
 
-若已安裝 Git，也可從終端機上傳到自己建立的空 Repository，先將 YOUR_ACCOUNT 換成帳號：
+若已安裝 Git，也可從終端機上傳到自己建立的空 Repository，先將 `YOUR_ACCOUNT` 換成帳號：
 
     git init
     git add .
     git commit -m "完成失控手沖升級"
     git branch -M main
-    git remote add origin https://github.com/YOUR_ACCOUNT/coffee-brewing-game.git
+    git remote add origin git@github.com:YOUR_ACCOUNT/cafe.git
     git push -u origin main
 
-本次工作環境未提供可直接使用的 Git／GitHub CLI；沒有執行登入、遠端建立或推送。修改前已建立本機 ZIP 安全備份，歷程見開發紀錄。
+目前版本已在本機安裝 Git 與 GitHub CLI、設定 ED25519 SSH 金鑰，並推送至 `main`。修改前的本機 ZIP 安全備份及實際部署歷程見開發紀錄。
 
 ### 設定 Pages
 
@@ -153,7 +157,7 @@
 4. 按 **Save**，到 **Actions** 等待 Pages 工作完成。
 5. 回 **Settings → Pages**，複製真正提供的公開網址。
 
-一般專案網址格式為 https://YOUR_ACCOUNT.github.io/coffee-brewing-game/；這只是格式示例，並非已部署網址。設定依據：[GitHub Pages 官方發佈來源說明](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)。
+本專案的實際網址為 <https://lekas-1012.github.io/cafe/>。一般專案網址格式為 `https://YOUR_ACCOUNT.github.io/cafe/`。設定依據：[GitHub Pages 官方發佈來源說明](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)。
 
 ### 驗證公開網站
 
@@ -162,9 +166,9 @@
 - 測試三視角、停水、指南、暫停及再挑戰。
 - 在 Console／Network 確認無例外、404 或失敗資源。
 - 重整與縮放，確認 Repository 子路徑依然載入正常。
-- 回填 REPORT.md 的真實連結與公開驗收紀錄。
+- 將真實連結與公開驗收紀錄同步到 REPORT.md。
 
-所有檔案使用相對路徑，已在 /coffee-brewing-game/ 子路徑測試。不需設定 base URL 或後端。若出現 404，先確認 main / (root)、index.html 位置與部署狀態；更新後可強制重新整理。
+所有檔案使用相對路徑，已在實際 `/cafe/` 子路徑驗證。不需設定 base URL 或後端。若出現 404，先確認 main / (root)、index.html 位置與部署狀態；更新後可強制重新整理。
 
 ## 測試與作業文件
 

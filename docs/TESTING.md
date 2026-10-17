@@ -153,12 +153,15 @@ full_brew_test.py 使用正式介面完成：
 - [ ] 真實喇叭或耳機的音質、音量及音訊權限差異；目前測的是音量節點。
 - [ ] 螢幕閱讀器完整遊玩；目前有標籤與鍵盤，但玩法依賴視覺。
 - [ ] 長時間低效能、作業系統休眠等環境；已有中斷保護，未做全硬體測試。
-- [ ] GitHub 建立 Repository、上傳、Pages 部署與真正公開網址的無痕驗收。
-- [ ] 報告姓名、學號、心得及真實公開連結。
+- [x] 建立公開 Repository、以 SSH 推送、設定 `main / (root)` 並確認 Pages 建置為 `built`。
+- [x] 公開網址以乾淨 Chrome 載入：首頁、CSS、SVG、八個 JavaScript 資源皆成功，開始後顯示六款豆卡，沒有 Console／Page／請求錯誤。
+- [ ] 報告姓名、學號與個人心得。
 
 ## 公開後必做
 
-- [ ] 無痕完整走完所有階段，查看 Console／Network。
-- [ ] 重新整理與 Repository 子路徑資源正常。
+- [ ] 在公開站由人工完整走完所有階段，主觀確認操作、聲音與節奏。
+- [x] 實際 `/cafe/` 子路徑首頁與所有必要資源正常，沒有 404。
 - [ ] 手沖三視角、停水、指南、暫停、結算、最佳與重玩正常。
-- [ ] README／REPORT 填入真實 Repository 及 Pages 網址。
+- [x] README／REPORT 已填入真實 Repository 及 Pages 網址。
+
+公開驗收網址：<https://lekas-1012.github.io/cafe/>；Repository：<https://github.com/Lekas-1012/cafe>。

@@ -108,16 +108,12 @@ tests/artifacts/ 已有自動化測試實際產生的截圖與資料；提交時
 
 ## 11. GitHub Repository
 
-**【待填：真實 Repository 連結】**
+**<https://github.com/Lekas-1012/cafe>**
 
-格式示例：https://github.com/YOUR_ACCOUNT/coffee-brewing-game
-
-這不是已建立的 Repository。
+公開 Repository，預設分支為 `main`。
 
 ## 12. GitHub Pages
 
-**【待填：Settings → Pages 提供的真實公開網址】**
+**<https://lekas-1012.github.io/cafe/>**
 
-格式示例：https://YOUR_ACCOUNT.github.io/coffee-brewing-game/
-
-目前尚未公開部署。完成後補填公開日期、無痕完整流程與資源檢查結果。部署操作見 [README](../README.md)。
+2026-10-17 由 `main / (root)` 公開部署。GitHub 建置狀態已確認為 `built`；公開首頁、樣式、圖示與遊戲腳本皆回應 200，乾淨 Chrome 煙霧測試可正常進入六款選豆畫面且沒有 JavaScript 或資源錯誤。公開站完整沖煮長流程仍保留為提交前人工驗收。部署與更新方式見 [README](../README.md)。
