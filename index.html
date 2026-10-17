@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f1e8">
+  <meta name="description" content="沒有秤，沒有計時器。親手控制水壺、觀察粉床，憑直覺沖出屬於你的好咖啡。免費純前端手沖技巧遊戲。">
+  <title>Brew by Feel — 手沖咖啡直覺挑戰</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+  <link rel="stylesheet" href="./style.css">
+  <script src="./js/beans.js" defer></script>
+  <script src="./js/chaos.js" defer></script>
+  <script src="./js/model.js" defer></script>
+  <script src="./js/controls.js" defer></script>
+  <script src="./js/preparation.js" defer></script>
+  <script src="./js/renderer.js" defer></script>
+  <script src="./js/preparation-renderer.js" defer></script>
+  <script src="./js/game.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="./index.html" aria-label="Brew by Feel 首頁"><img src="./assets/favicon.svg" width="35" height="35" alt=""><span>Brew by Feel<span class="brand-sub">THE INTUITIVE BREWING CLUB</span></span></a>
+    <nav aria-label="主要導覽">
+      <button class="text-button help-trigger" type="button">操作指南 <span aria-hidden="true">↗</span></button>
+      <span class="nav-divider"></span>
+      <button id="sound-toggle" class="sound-button" type="button" aria-pressed="false" aria-label="開啟音效"><span aria-hidden="true">♪</span><span id="sound-label">音效關閉</span></button>
+    </nav>
+  </header>
+
+  <main>
+    <nav id="workflow" class="workflow" aria-label="沖煮步驟" hidden><ol><li data-step="beans">選豆</li><li data-step="grind">研磨</li><li data-step="dose">倒粉</li><li data-step="heat">熱水</li><li data-step="game">手沖</li><li data-step="result">品飲</li></ol><div class="workflow-end"><span id="workflow-mode">正式挑戰</span><button id="journey-pause" class="text-button" type="button" hidden>Ⅱ 暫停</button></div></nav>
+    <section id="home-screen" class="screen home-screen" aria-labelledby="home-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="tiny-line"></span> A LITTLE LESS MEASURING. A LITTLE MORE FEELING.</p>
+        <h1 id="home-title">Brew<br>by <em>Feel.</em><span class="title-dot" aria-hidden="true">✳</span></h1>
+        <h2>手沖咖啡直覺挑戰</h2>
+        <p class="hero-description">沒有秤，沒有計時器。<br>你能只憑感覺，沖出一杯好咖啡嗎？</p>
+        <div class="hero-actions"><button id="start-button" class="button primary" type="button">開始沖煮 <span aria-hidden="true">↗</span></button><button class="button subtle help-trigger" type="button"><span class="play-icon" aria-hidden="true">▷</span> 先學怎麼玩</button></div>
+        <p class="best-record"><span aria-hidden="true">♧</span> 個人最佳 <strong id="home-best">尚未留下第一杯</strong></p>
+      </div>
+      <div class="hero-visual">
+        <div class="visual-topline"><span>THE ART OF SLOWING DOWN</span><span>EST. 2026</span></div>
+        <div class="hero-stamp"><span>跟著感覺</span><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 4v32M4 20h32M9 9l22 22M9 31 31 9"/></svg><span>找到節奏</span></div>
+        <canvas id="preview-canvas" width="960" height="650" aria-label="手沖壺、玻璃濾杯與分享壺的原創插畫"></canvas>
+        <div class="visual-caption"><span class="caption-rule"></span><span>一把壺，一片粉床，一段自己的節奏。</span></div>
+        <div class="bean-note"><span class="bean-icon" aria-hidden="true">◒</span><span>完整沖煮旅程<strong>從一顆豆，到你的一杯。</strong></span><span class="bean-flavor">選豆 / 研磨 / 傾注</span></div>
+      </div>
+      <div class="ritual-strip">
+        <div><span class="ritual-number">01</span><div><h3>從豆開始</h3><p>選豆、磨豆、備好熱水。</p></div></div>
+        <div><span class="ritual-number">02</span><div><h3>讀懂粉床</h3><p>看氣泡、濕潤與滴漏。</p></div></div>
+        <div><span class="ritual-number">03</span><div><h3>相信直覺</h3><p>自己決定何時收尾。</p></div></div>
+        <span class="ritual-end">GOOD COFFEE TAKES FEELING. <span aria-hidden="true">↗</span></span>
+      </div>
+    </section>
+
+    <section id="beans-screen" class="screen prep-screen" hidden aria-labelledby="beans-title">
+      <div class="prep-heading"><div><p class="eyebrow">EVERY GOOD CUP BEGINS WITH A BEAN</p><h1 id="beans-title" tabindex="-1">今天，想喝哪一種風景？</h1><p>六份示範配方，六種不同的手感。從你喜歡的風味開始。</p></div><button class="text-button prep-home" type="button">回到首頁 ↗</button></div>
+      <div class="selection-toolbar"><div class="mode-controls" role="group" aria-label="遊戲模式"><button type="button" data-mode="challenge" aria-pressed="true">正式挑戰<span>跟著感覺，不看精確數字</span></button><button type="button" data-mode="practice" aria-pressed="false">練習模式<span>看見水溫，理解參數</span></button></div><label class="roast-filter">烘焙程度<select id="roast-filter"><option value="all">所有烘焙</option value="淺焙">淺焙</option><option value="中淺焙">中淺焙</option><option value="中焙">中焙</option><option value="中深焙">中深焙</option></select></label></div>
+      <div id="bean-grid" class="bean-grid"></div>
+      <p class="bean-disclaimer">示範遊戲配方，並非真實販售批次。風味是代表性描述，不是品種的必然結果。</p>
+      <div class="prep-actions"><p id="selected-bean-note">先選一份咖啡，再開始這段旅程。</p><button id="beans-next" class="button primary" type="button" disabled>去磨豆 <span aria-hidden="true">→</span></button></div>
+    </section>
+
+    <section id="grind-screen" class="screen prep-screen" hidden aria-labelledby="grind-title">
+      <div class="prep-heading"><div><p class="eyebrow">SLOW HANDS. FRESH GROUNDS.</p><h1 id="grind-title" tabindex="-1">香氣，從這一圈開始。</h1><p>選好粗細，把豆子放入，再親手轉動手柄。</p></div><button class="text-button prep-home" type="button">離開這杯 ↗</button></div>
+      <div class="prep-layout"><aside class="prep-panel"><p class="eyebrow">YOUR CHOICE</p><h2 class="prep-bean-name"></h2><label for="grind-setting" class="setting-label">研磨粗細 <strong id="grind-label">中等</strong></label><input id="grind-setting" type="range" min="0" max="100" value="50" step="1" aria-valuetext="中等"><div class="range-ends"><span>偏粗</span><span>偏細</span></div><p class="setting-description">粗一些，水較容易通過；細一些，接觸更多，也可能增加堵塞。開始研磨後刻度固定。</p><p id="grind-recommendation" class="practice-note" hidden></p><button id="load-beans" class="button subtle" type="button">將這份豆子倒入</button><div id="grinder-repair" class="repair-card" hidden><strong>咔啦！手柄離家出走了。</strong><p>你不是在拆機器吧？按住下方按鈕裝回去，咖啡粉都還在。</p><button id="repair-handle" class="button primary" type="button">按住，裝回手柄 <span aria-hidden="true">↺</span></button><div class="repair-track" role="progressbar" aria-label="手柄修復進度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="repair-progress"><i></i></div></div><p id="grind-temper" class="grind-temper" aria-live="polite">手感：輕鬆慢磨</p><p id="grind-status" class="stage-status" aria-live="polite">磨豆機還空著，先放入咖啡豆。</p><p class="keyboard-note">按住手柄繞圈，慢慢磨就好。快速暴力甩動可能斷柄！鍵盤聚焦手柄按住空白鍵可穩定研磨；斷掉時按住修復鈕即可繼續。</p></aside><div id="grind-scene" class="prep-scene"><canvas id="grind-canvas" width="960" height="650" role="img" aria-label="手搖磨豆機，豆子與研磨後的咖啡粉會隨操作改變"></canvas><button id="grind-handle" class="grind-handle" type="button" aria-label="磨豆手柄，按住並繞圓轉動，或按住空白鍵" disabled><span aria-hidden="true"></span></button></div></div>
+      <div class="prep-actions"><p>不趕時間。聞一聞剛磨好的想像。</p><button id="grind-next" class="button primary" type="button" disabled>把粉倒進濾杯 <span aria-hidden="true">→</span></button></div>
+    </section>
+
+    <section id="dose-screen" class="screen prep-screen" hidden aria-labelledby="dose-title">
+      <div class="prep-heading"><div><p class="eyebrow">A LITTLE CARE, BEFORE THE FIRST DROP</p><h1 id="dose-title" tabindex="-1">讓每一粒粉，找到位置。</h1><p>拿起粉杯，移到濾杯上方，再傾斜倒入。最後輕晃，鋪平粉床。</p></div><button class="text-button prep-home" type="button">離開這杯 ↗</button></div>
+      <div class="prep-layout"><aside class="prep-panel"><p class="eyebrow">FROM GRINDER TO DRIPPER</p><h2 class="prep-bean-name"></h2><label for="powder-angle" class="setting-label">粉杯傾角 <span aria-hidden="true">↘</span></label><input id="powder-angle" type="range" min="0" max="100" value="0" aria-label="調整粉杯傾角"><div class="range-ends"><span>直立</span><span>傾倒</span></div><p class="setting-description">按住粉杯移到濾杯上方。滾輪可調傾角，也可先調好滑桿再拖移；放開就停止倒粉。</p><p class="setting-description">粉倒完後，按住濾杯左右輕晃，使表面更平整。</p><p id="dose-status" class="stage-status" aria-live="polite">濾紙還空著，請把粉杯帶到濾杯上方。</p><p class="keyboard-note">聚焦粉杯，方向鍵移動，空白鍵按住倒粉；傾角用滑桿調整。聚焦濾杯後用左右鍵鋪平。</p></aside><div id="dose-scene" class="prep-scene"><canvas id="dose-canvas" width="960" height="650" role="img" aria-label="濾杯從空白濾紙逐漸累積實際倒入的咖啡粉"></canvas><button id="powder-cup" class="powder-cup" type="button" aria-label="咖啡粉杯，按住移動到濾杯上方，滾輪調整傾角；鍵盤方向鍵移動，空白鍵倒粉"><svg viewBox="-90 -100 180 200" aria-hidden="true"><ellipse cx="0" cy="-62" rx="62" ry="17" fill="#b0b79f"/><path d="M-62-62-46 74Q0 94 46 74L62-62" fill="#d9decb" stroke="#8e9c80" stroke-width="2"/><path id="powder-in-cup" d="M-52-30-42 65Q0 81 42 65L52-30Z" fill="#805335"/><ellipse cx="0" cy="-62" rx="57" ry="13" fill="#626b55"/><path d="M-43-45-32 59" stroke="#ffffff70" stroke-width="5" stroke-linecap="round"/></svg></button><button id="level-bed" class="level-bed" type="button" aria-label="濾杯：按住左右輕晃鋪平粉床，鍵盤使用左右方向鍵"></button></div></div>
+      <div class="prep-actions"><p>同一份豆子，沒有憑空增加的咖啡粉。</p><button id="dose-next" class="button primary" type="button" disabled>準備熱水 <span aria-hidden="true">→</span></button></div>
+    </section>
+
+    <section id="heat-screen" class="screen prep-screen" hidden aria-labelledby="heat-title">
+      <div class="prep-heading"><div><p class="eyebrow">FIND YOUR WARMTH</p><h1 id="heat-title" tabindex="-1">把溫度，留給感覺。</h1><p>開啟加熱，觀察指針與蒸氣。停止後等待降溫，何時沖煮由你決定。</p></div><button class="text-button prep-home" type="button">離開這杯 ↗</button></div>
+      <div class="prep-layout"><aside class="prep-panel"><p class="eyebrow">WATER MAKES A DIFFERENCE</p><h2 class="prep-bean-name"></h2><div class="analog-gauge" role="img" aria-label="類比水溫錶：指針從微溫移往近沸"><svg viewBox="0 0 240 165" aria-hidden="true"><path d="M35 125A85 85 0 1 1 205 125" fill="none" stroke="#d6dcc9" stroke-width="13"/><path d="M171 35A85 85 0 0 1 205 125" fill="none" stroke="#b08a62" stroke-width="13"/><path d="M43 105 51 107M48 70 56 74M72 40 77 49M108 26 109 36M147 29 144 39M181 50 173 57M198 84 188 88" stroke="#7e8b6e" stroke-width="2"/><g id="heat-needle" transform="rotate(-120 120 110)"><path d="M120 110V38" stroke="#38513e" stroke-width="3" stroke-linecap="round"/><circle cx="120" cy="110" r="7" fill="#38513e"/></g><text x="25" y="153">微溫</text><text x="112" y="24">熱</text><text x="195" y="153">近沸</text></svg><strong id="heat-exact" hidden></strong></div><p id="heat-recommendation" class="practice-note" hidden></p><button id="heater-toggle" class="button primary" type="button" aria-pressed="false">開始加熱 <span aria-hidden="true">♨</span></button><p id="heat-status" class="stage-status" aria-live="polite">水壺安靜地等待。先啟動加熱，再讀一讀指針。</p><p class="keyboard-note">類比刻度從微溫到近沸連續變化。正式挑戰不標示最佳區間；練習模式可看精確水溫。</p></aside><div class="prep-scene"><canvas id="heat-canvas" width="960" height="650" role="img" aria-label="手沖壺與加熱底座，蒸氣及底座光線隨實際溫度與加熱狀態變化"></canvas></div></div>
+      <div class="prep-actions"><p>水會持續變化，準備好就帶上這份溫度。</p><button id="heat-next" class="button primary" type="button" disabled>開始手沖 <span aria-hidden="true">→</span></button></div>
+    </section>
+
+    <section id="game-screen" class="screen game-screen" hidden aria-labelledby="game-title">
+      <div class="game-heading"><div><p class="eyebrow">YOUR DAILY RITUAL</p><h1 id="game-title" tabindex="-1">讓感覺，接手。</h1></div><button id="leave-button" class="text-button" type="button">離開這杯 <span aria-hidden="true">↗</span></button></div>
+      <div class="game-layout">
+        <aside class="brew-notes">
+          <p class="eyebrow">TODAY'S COFFEE</p><h2 id="brew-bean-name"></h2><p id="brew-bean-roast" class="brew-bean-roast"></p><p id="brew-notes" class="tasting-notes"></p>
+          <div class="notes-rule"></div><p class="notes-title">一杯好咖啡，從觀察開始。</p>
+          <ul class="instruction-list"><li><span aria-hidden="true">⤢</span><div><strong>前後左右，輕輕畫圈</strong><p>按住水壺拖移，別一直挖同一點；往前伸壺會降低。</p></div></li><li><span aria-hidden="true">↕</span><div><strong>強流有脾氣</strong><p>W 增強、S 減弱；強流會偏；低壺急甩還會撞倒器具！</p></div></li><li><span aria-hidden="true">⏸</span><div><strong>放開，讓它呼吸</strong><p>立即停水，觀察變化。</p></div></li></ul>
+          <button class="text-button help-trigger" type="button">完整操作指南 ↗</button>
+          <details class="keyboard-help"><summary>鍵盤也能沖煮</summary><p>聚焦水壺後按住空白鍵出水，方向鍵調整落點，W/S 調流量。放開空白鍵停水。Esc 暫停。</p></details><div class="brew-thermometer"><span>微溫</span><div><i id="brew-temp-marker"></i></div><span>近沸</span></div><p id="game-temperature" class="practice-note" hidden></p>
+        </aside>
+        <div class="brew-workspace">
+          <div class="scene-top"><span><i class="live-dot"></i><span id="scene-state">準備就緒</span></span><div class="view-controls" role="group" aria-label="沖煮視角"><button type="button" data-view="overview" aria-pressed="true" title="查看完整沖煮設備">全景</button><button type="button" data-view="overhead" aria-pressed="false" title="從上方觀察粉床分布">俯視</button><button type="button" data-view="close" aria-pressed="false" title="放大觀看粉床與水流">近看粉床</button></div><button id="pause-button" class="text-button" type="button" aria-label="暫停沖煮">Ⅱ 暫停</button></div>
+          <div id="scene" class="scene">
+            <canvas id="game-canvas" width="960" height="650" role="img" aria-label="互動沖煮場景：粉床、水流、滴漏與分享壺。請使用水壺按鈕操作。"></canvas>
+            <button id="kettle" class="kettle" type="button" aria-label="手沖壺。按住出水，前後左右拖曳落點，大流量會晃動；滾輪或W/S調流量；放開停水。鍵盤按住空白鍵出水。" aria-pressed="false" aria-describedby="drag-hint">
+              <svg viewBox="-155 -110 310 220" aria-hidden="true">
+                <defs><linearGradient id="kettle-metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#496254"/><stop offset=".45" stop-color="#2c453b"/><stop offset="1" stop-color="#1c3029"/></linearGradient><linearGradient id="kettle-spout"><stop stop-color="#3d5749"/><stop offset=".6" stop-color="#718171"/><stop offset="1" stop-color="#314b3d"/></linearGradient></defs>
+                <path d="M60-25C131-55 139 64 67 48" fill="none" stroke="#263c31" stroke-width="16"/><path d="M68-25C117-40 124 51 72 43" fill="none" stroke="#73816b" stroke-width="3"/>
+                <path d="M-35 30C-86 40-75-31-122-35L-128-42C-65-54-72 1-27 0Z" fill="url(#kettle-spout)" stroke="#243d30" stroke-width="2"/>
+                <path d="M-43-21Q-54 5-55 43Q-49 67 19 70Q82 68 85 43L65-22Z" fill="url(#kettle-metal)" stroke="#263f31" stroke-width="2"/>
+                <path d="M-40-15Q-7-30 62-16" fill="none" stroke="#92a18b" stroke-width="2" opacity=".7"/><path d="M-32-8Q-40 23-36 44" fill="none" stroke="#7b9079" stroke-width="5" opacity=".3"/>
+                <ellipse cx="12" cy="-24" rx="53" ry="10" fill="#243c30"/><path d="M-30-27Q9-58 53-27" fill="#3c5544" stroke="#233c2c" stroke-width="2"/><path d="M3-47v-7q8-9 17 0v7" fill="#b58b5c" stroke="#775a3b" stroke-width="2"/>
+                <path d="M-43 53Q18 78 78 53" fill="none" stroke="#11281d" opacity=".5" stroke-width="3"/>
+              </svg>
+            </button>
+            <button id="upright-button" class="upright-button" type="button" hidden>扶正器具，繼續沖煮 ↺</button><div id="chaos-toast" class="chaos-toast" role="status" aria-live="polite" hidden></div><div id="drag-hint" class="drag-hint"><span aria-hidden="true">⤢</span> 按住拖移前後左右，滾輪調水流</div>
+            <div id="pause-overlay" class="pause-overlay" role="dialog" aria-modal="true" aria-labelledby="pause-title" hidden><span class="eyebrow">TAKE A BREATH</span><h2 id="pause-title">讓這一刻，停一下。</h2><p id="pause-message">時間與萃取已暫停，回來後再繼續。</p><button id="resume-button" class="button primary" type="button">繼續沖煮 <span aria-hidden="true">↗</span></button></div>
+          </div>
+          <div class="observation"><span class="observation-icon" aria-hidden="true">◉</span><p id="observation-text" aria-live="polite">先熟悉水壺。第一道水落下，這杯咖啡才正式開始。</p></div>
+          <div class="pour-controls"><label>操作模式<select id="control-mode"><option value="wheel">自由落點／滾輪調水</option><option value="drag">上下拖曳調流量</option></select></label><label>細流 <input id="flow-setting" type="range" min="0" max="10.5" step="0.1" value="4" aria-label="注水強弱" aria-valuetext="柔和水流">強流</label><label>後緣 <input id="depth-setting" type="range" min="-1.5" max="1.5" step="0.02" value="0" aria-label="前後注水落點">前緣</label></div>
+        </div>
+      </div>
+      <div class="game-bottom"><p><span aria-hidden="true">✳</span> 不必追逐數字。看看粉床，聽聽水聲。</p><button id="finish-button" class="button primary" type="button">完成沖煮 <span aria-hidden="true">→</span></button></div>
+    </section>
+
+    <section id="result-screen" class="screen result-screen" hidden aria-labelledby="result-title">
+      <div class="result-intro"><p class="eyebrow">A CUP THAT TELLS YOUR STORY</p><h1 id="result-title" tabindex="-1">每一杯，都是練習。</h1><p>現在，來讀懂這次的手感。</p></div>
+      <div class="result-layout"><div class="score-card"><span class="eyebrow">YOUR BREW</span><div class="score-display"><strong id="total-score">0</strong><span>/ 100</span></div><p id="score-badge" class="score-badge">初次的練習</p><h2 id="flavor-title"></h2><div id="flavor-notes" class="flavor-tags"></div><p id="flavor-description"></p><p id="new-best" class="new-best" hidden>✧ 留下了新的個人最佳</p></div>
+      <div class="result-details"><h2>這杯咖啡的輪廓 <span>BREW PROFILE</span></h2><div id="metric-list" class="metric-list"></div><div class="brew-facts"><div><span>沖煮時間</span><strong id="result-time"></strong></div><div><span>估算注水量</span><strong id="result-water"></strong></div><div><span>注水段數</span><strong id="result-pulses"></strong></div></div><dl id="result-parameters" class="result-parameters"></dl><section class="accident-report" aria-labelledby="accident-title"><p class="eyebrow">A LITTLE MESS, A REAL LESSON</p><h3 id="accident-title">這杯的現場紀錄</h3><p id="accident-comment"></p><dl id="accident-facts"></dl><p id="accident-penalty"></p></section><p id="result-factors" class="result-footnote"></p><p class="result-footnote">精確數據於練習或結算揭露。這是簡化模擬，風味描述供遊戲學習參考。</p></div></div>
+      <div class="advice-section"><div><p class="eyebrow">A NOTE FOR YOUR NEXT CUP</p><h2>下一杯，可以試試看。</h2></div><ul id="advice-list"></ul></div>
+      <div class="result-actions"><button id="retry-button" class="button primary" type="button">再沖一杯 <span aria-hidden="true">↗</span></button><button id="home-button" class="button subtle" type="button">回到首頁</button></div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><span>BREW BY FEEL <span class="footer-dot">·</span> 一杯咖啡的專注練習</span><span>MADE TO BE FELT. <span aria-hidden="true">✳</span></span></footer>
+
+  <dialog id="bean-dialog" class="bean-dialog" aria-labelledby="bean-dialog-title"><button class="dialog-close" data-close="bean-dialog" type="button" aria-label="關閉咖啡介紹">×</button><div id="bean-detail-content"></div><button class="button primary" data-close="bean-dialog" type="button">帶著理解，再做選擇 ↗</button></dialog>
+  <dialog id="prep-pause-dialog" class="leave-dialog" aria-labelledby="prep-pause-title"><p class="eyebrow">TAKE A BREATH</p><h2 id="prep-pause-title">讓這一刻，停一下。</h2><p id="prep-pause-message">準備與加熱已暫停。</p><div class="dialog-actions"><button id="prep-resume" class="button primary" type="button">繼續這杯 ↗</button></div></dialog>
+
+  <dialog id="help-dialog" class="help-dialog" aria-labelledby="help-title"><button class="dialog-close" data-close="help-dialog" aria-label="關閉操作指南" type="button">×</button><p class="eyebrow">FROM A BEAN TO YOUR OWN CUP</p><h2 id="help-title">從豆開始，跟著感覺。</h2><p class="dialog-lead">選豆 → 研磨 → 倒粉 → 熱水 → 手沖 → 品飲。<br>正式挑戰沒有精確水溫、注水量與計時器；練習可讀水溫，結果才揭露完整數據。</p><div class="tutorial-steps"><article><span>◒</span><h3>選豆，親手磨出香氣</h3><p>閱讀六款示範配方，選好研磨粗細。放入豆子後，拖動手柄繞圈；也可聚焦手柄按住空白鍵。暴力快速甩動會累積壓力、弄斷手柄；按住修復鈕裝回後就能繼續。練習較寬容，研磨完成才能倒粉。</p></article><article><span>↘</span><h3>移動粉杯，鋪好粉床</h3><p>按住粉杯移到濾杯上方，以滾輪或傾角滑桿倒粉。放開就停止。粉倒入後，按住濾杯左右輕晃，或聚焦濾杯用左右鍵鋪平。</p></article><article><span>♨</span><h3>準備熱水，讀懂指針</h3><p>開啟加熱，觀察類比溫度錶與蒸氣。停止加熱後水會冷卻，由你決定何時開始。練習模式可看精確水溫與建議區間。</p></article><article><span>↔</span><h3>落點與流量，各自掌握</h3><p>按住水壺出水，前後左右拖移，在粉床上畫小圈。滾輪向上或 W 增強、向下或 S 減弱。小流量穩定，大流量會偏流；快速移動有慣性。虛線小環是瞄準處，真正落點要看水柱末端。往前緣伸壺時壺身會降低，快速橫甩撞進杯緣，會把濾杯撞倒；猛烈撞擊會連帶撞翻分享壺。請先放開停水、按「扶正器具」再續注，灑出的水不會回來。也可用方向鍵、前後滑桿或點粉床定位。</p></article><article><span>◌</span><h3>放開，讓粉床呼吸</h3><p>放開立即停水，萃取與滴漏仍持續。先潤濕，再等待氣泡緩和，接著分段續注。觀察積水升降，不要只沖一個位置，否則粉床會挖出坑洞與通道。沖太邊邊會打濕濾紙、流到桌面；水痕會累積，放開可立即止水。</p></article><article><span>↗</span><h3>收尾，讀懂這一杯</h3><p>切換全景、俯視與近看粉床觀察。自行按完成沖煮，查看豆種、研磨、水溫、時間、水量、風味及建議，再從選豆開始挑戰。現場紀錄會揭露灑水、邊緣撞擊、桌面濕度、挖坑與斷柄；練習事故扣分減半，不覆寫正式紀錄。</p></article></div><div class="tutorial-keyboard"><strong>觸控、鍵盤與舊式操作</strong><p>觸控先用獨立流量滑桿調水，再按住水壺移動。鍵盤聚焦水壺後按住空白鍵出水，方向鍵調落點、W/S 調流量。可切換「上下拖曳調流量」，垂直拖曳也不會改變落點。Esc 暫停；離開頁面會自動暫停。</p></div><button class="button primary" data-close="help-dialog" type="button">懂了，跟著感覺走 <span aria-hidden="true">↗</span></button></dialog>
+  <dialog id="leave-dialog" class="leave-dialog" aria-labelledby="leave-title"><p class="eyebrow">SAVE A LITTLE ROOM FOR ANOTHER CUP</p><h2 id="leave-title">放下這杯咖啡？</h2><p>這次的沖煮將不計分。隨時可以重新開始。</p><div class="dialog-actions"><button id="keep-brewing" class="button primary" type="button">繼續這杯</button><button id="confirm-leave" class="button subtle" type="button">回到首頁</button></div></dialog>
+  <noscript><div class="noscript">這款互動遊戲需要 JavaScript。請在瀏覽器設定中啟用後重新載入。</div></noscript>
+</body>
+</html>

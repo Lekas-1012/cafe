@@ -1,0 +1,6 @@
+.tools/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+tests/artifacts/
